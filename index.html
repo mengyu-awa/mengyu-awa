@@ -765,10 +765,195 @@
             color: #555;
             text-decoration: none;
             transition: color 0.3s;
+            cursor: pointer;
         }
 
         footer a:hover {
             color: #888;
+        }
+
+        /* 联系弹窗 */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 
+                        0 0 0 1px rgba(255, 255, 255, 0.05);
+            transform: scale(0.95) translateY(10px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s;
+            margin: -0.5rem -0.5rem 0 0;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent);
+        }
+
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .contact-item:hover {
+            border-color: #333;
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateX(4px);
+        }
+
+        .contact-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+            background: #1a1a1a;
+            border: 1px solid var(--border);
+        }
+
+        .contact-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .contact-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.2rem;
+        }
+
+        .contact-value {
+            font-size: 0.95rem;
+            color: var(--text);
+            font-family: 'Consolas', 'Monaco', monospace;
+            word-break: break-all;
+        }
+
+        .contact-copy {
+            padding: 0.4rem 0.8rem;
+            background: transparent;
+            border: 1px solid #333;
+            color: #888;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .contact-copy:hover {
+            border-color: #555;
+            color: var(--accent);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .contact-copy.copied {
+            background: rgba(74, 222, 128, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .modal-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #444;
+        }
+
+        /* 复制提示 */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--surface);
+            color: var(--accent);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            font-size: 0.9rem;
+            z-index: 2000;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
         /* 加载更多 */
@@ -822,6 +1007,11 @@
                 width: 100%;
                 height: 180px;
             }
+
+            .modal {
+                padding: 1.5rem;
+                border-radius: 12px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -849,6 +1039,10 @@
         a:focus-visible, button:focus-visible {
             outline: 2px solid #555;
             outline-offset: 2px;
+        }
+
+        body.modal-open {
+            overflow: hidden;
         }
     </style>
 </head>
@@ -930,9 +1124,43 @@
     </main>
 
     <footer>
-        <p> 梦语の小站 · <a href="mailto:mengyu.awa@outlook.com">联系我</a> · <a href="https://space.bilibili.com/1013459131" target="_blank" rel="noopener noreferrer">B站空间</a></p>
+        <p> 梦语の小站 · <a onclick="App.openContactModal()" role="button" tabindex="0">联系我</a> · <a href="https://space.bilibili.com/1013459131" target="_blank" rel="noopener noreferrer">B站空间</a></p>
         <p style="margin-top: 0.5rem; font-size: 0.8rem;">使用爱与代码构建</p>
     </footer>
+
+    <!-- 联系弹窗 -->
+    <div class="modal-overlay" id="contactModal" onclick="App.closeContactModalOnOverlay(event)" role="dialog" aria-modal="true" aria-label="联系方式">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">联系我</h2>
+                <button class="modal-close" onclick="App.closeContactModal()" aria-label="关闭弹窗">×</button>
+            </div>
+            <div class="contact-list">
+                <div class="contact-item">
+                    <div class="contact-icon" role="img" aria-label="QQ">🐧</div>
+                    <div class="contact-info">
+                        <div class="contact-label">QQ 号码</div>
+                        <div class="contact-value" id="contactQQ">1775894379</div>
+                    </div>
+                    <button class="contact-copy" onclick="App.copyContact('contactQQ', this)" aria-label="复制QQ号">复制</button>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon" role="img" aria-label="邮箱">✉️</div>
+                    <div class="contact-info">
+                        <div class="contact-label">电子邮箱</div>
+                        <div class="contact-value" id="contactEmail">mengyu.awa@outlook.com</div>
+                    </div>
+                    <button class="contact-copy" onclick="App.copyContact('contactEmail', this)" aria-label="复制邮箱">复制</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                点击复制按钮即可复制到剪贴板
+            </div>
+        </div>
+    </div>
+
+    <!-- 复制提示 -->
+    <div class="toast" id="copyToast" role="status" aria-live="polite"></div>
 
     <script>
         // ==================== 数据配置区 ====================
@@ -1027,6 +1255,11 @@ function hello() {
                         this.showPage(hash, false);
                     }
                 });
+
+                // ESC键关闭弹窗
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') this.closeContactModal();
+                });
             },
 
             handleInitialRoute() {
@@ -1063,6 +1296,71 @@ function hello() {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             },
 
+            // ==================== 联系弹窗 ====================
+            openContactModal() {
+                const modal = document.getElementById('contactModal');
+                modal.classList.add('active');
+                document.body.classList.add('modal-open');
+                
+                // 聚焦到关闭按钮以提升无障碍体验
+                setTimeout(() => {
+                    modal.querySelector('.modal-close').focus();
+                }, 100);
+            },
+
+            closeContactModal() {
+                const modal = document.getElementById('contactModal');
+                modal.classList.remove('active');
+                document.body.classList.remove('modal-open');
+                
+                // 恢复焦点到触发按钮
+                document.querySelector('footer a[onclick*="openContactModal"]').focus();
+            },
+
+            closeContactModalOnOverlay(event) {
+                if (event.target === event.currentTarget) {
+                    this.closeContactModal();
+                }
+            },
+
+            async copyContact(elementId, button) {
+                const text = document.getElementById(elementId).textContent;
+                
+                try {
+                    await navigator.clipboard.writeText(text);
+                    this.showToast('已复制到剪贴板');
+                    
+                    button.classList.add('copied');
+                    button.textContent = '已复制';
+                    
+                    setTimeout(() => {
+                        button.classList.remove('copied');
+                        button.textContent = '复制';
+                    }, 2000);
+                } catch (err) {
+                    // 降级方案
+                    const input = document.createElement('input');
+                    input.value = text;
+                    document.body.appendChild(input);
+                    input.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(input);
+                    
+                    this.showToast('已复制到剪贴板');
+                }
+            },
+
+            showToast(message) {
+                const toast = document.getElementById('copyToast');
+                toast.textContent = message;
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            },
+
+            // ==================== 资源模块 ====================
             renderResourceTabs() {
                 const categories = ['全部', ...new Set(AppData.resources.map(r => r.category))];
                 const container = document.getElementById('resourceTabs');
@@ -1105,6 +1403,7 @@ function hello() {
                 this.renderResources();
             },
 
+            // ==================== 下载模块 ====================
             renderDownloadTabs() {
                 const categories = ['全部', ...new Set(AppData.downloads.map(d => d.category))];
                 const container = document.getElementById('downloadTabs');
@@ -1164,6 +1463,7 @@ function hello() {
                 }, 3000);
             },
 
+            // ==================== 博客模块 ====================
             renderBlogTabs() {
                 const categories = ['全部', ...new Set(AppData.blogs.map(b => b.category))];
                 const container = document.getElementById('blogTabs');
