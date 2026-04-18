@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的空间</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --surface-hover: #1a1a1a;
+            --text: #e5e5e5;
+            --text-muted: #666;
+            --accent: #fff;
+            --border: #222;
+            --success: #4ade80;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* 导航 */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            z-index: 100;
+            transform: translateY(-100%);
+            animation: slideDown 0.8s ease-out 0.3s forwards;
+        }
+
+        @keyframes slideDown {
+            to { transform: translateY(0); }
+        }
+
+        .nav-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 600;
+            color: var(--accent);
+            text-decoration: none;
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 0.8s forwards;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .nav-links li:nth-child(1) { animation-delay: 0.9s; }
+        .nav-links li:nth-child(2) { animation-delay: 1s; }
+        .nav-links li:nth-child(3) { animation-delay: 1.1s; }
+        .nav-links li:nth-child(4) { animation-delay: 1.2s; }
+        .nav-links li:nth-child(5) { animation-delay: 1.3s; }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .bilibili-btn {
+            background: #fb7299;
+            color: #fff;
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            opacity: 0;
+            transform: scale(0.9);
+            animation: popIn 0.5s ease-out 1.4s forwards;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        @keyframes popIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* 页面容器 */
+        .page {
+            display: none;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 100px 5% 60px;
+            min-height: 100vh;
+        }
+
+        .page.active {
+            display: block;
+            animation: pageEnter 0.5s ease-out;
+        }
+
+        @keyframes pageEnter {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* 主页 */
+        .home-intro {
+            padding: 4rem 0;
+            text-align: center;
+            opacity: 0;
+            animation: fadeUp 0.8s ease-out 0.6s forwards;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .avatar-container {
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: scaleIn 0.6s ease-out 0.4s forwards;
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--border);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 60px rgba(255, 255, 255, 0.15);
+            border-color: #444;
+        }
+
+        .home-intro h1 {
+            font-size: 2.4rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .home-intro p {
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+        }
+
+        .home-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.7rem 1.8rem;
+            border: 1px solid #333;
+            background: transparent;
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            border-color: #555;
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+            font-weight: 500;
+        }
+
+        .btn-primary:hover {
+            background: #e0e0e0;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-back {
+            margin-bottom: 2rem;
+        }
+
+        /* 分类标签 */
+        .category-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .category-tab {
+            padding: 0.4rem 1rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .category-tab:hover {
+            border-color: #444;
+            color: var(--text);
+        }
+
+        .category-tab.active {
+            background: var(--surface);
+            color: var(--accent);
+            border-color: #444;
+        }
+
+        /* 资源网格 */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .resource-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s;
+            opacity: 0;
+            animation: slideUp 0.5s ease-out forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: transparent;
+            transition: background 0.3s;
+        }
+
+        .resource-card:hover {
+            border-color: #444;
+            background: var(--surface-hover);
+            transform: translateY(-3px);
+        }
+
+        .resource-card:hover::before {
+            background: #fb7299;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .resource-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            background: #222;
+            transition: transform 0.3s;
+        }
+
+        .resource-card:hover .resource-icon {
+            transform: scale(1.1);
+        }
+
+        .resource-icon-fallback {
+            width: 48px;
+            height: 48px;
+            background: #222;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .resource-name {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.3rem;
+        }
+
+        .resource-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .resource-meta {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .resource-tag {
+            font-size: 0.75rem;
+            color: #555;
+            background: #1a1a1a;
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+        }
+
+        /* 博客列表 */
+        .blog-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .blog-item {
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border);
+            opacity: 0;
+            animation: fadeUp 0.6s ease-out forwards;
+            cursor: pointer;
+            transition: padding-left 0.3s;
+        }
+
+        .blog-item:nth-child(1) { animation-delay: 0.1s; }
+        .blog-item:nth-child(2) { animation-delay: 0.2s; }
+        .blog-item:nth-child(3) { animation-delay: 0.3s; }
+        .blog-item:nth-child(4) { animation-delay: 0.4s; }
+
+        .blog-item:hover {
+            padding-left: 1rem;
+        }
+
+        .blog-item:last-child {
+            border-bottom: none;
+        }
+
+        .blog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent);
+            transition: color 0.3s;
+        }
+
+        .blog-item:hover .blog-title {
+            color: #fff;
+        }
+
+        .blog-category {
+            font-size: 0.75rem;
+            color: #555;
+            background: #1a1a1a;
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+
+        .blog-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .blog-excerpt {
+            color: #888;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* 博文详情页 */
+        .blog-detail {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .blog-detail-header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .blog-detail-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .blog-detail-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+        }
+
+        .blog-detail-content {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: #ccc;
+        }
+
+        .blog-detail-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .blog-detail-content h2 {
+            font-size: 1.4rem;
+            color: var(--accent);
+            margin: 2.5rem 0 1rem;
+            font-weight: 600;
+        }
+
+        .blog-detail-content h3 {
+            font-size: 1.15rem;
+            color: #ddd;
+            margin: 2rem 0 0.8rem;
+            font-weight: 600;
+        }
+
+        .blog-detail-content code {
+            background: #1a1a1a;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            color: #e6e6e6;
+        }
+
+        .blog-detail-content pre {
+            background: #0f0f0f;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border);
+        }
+
+        .blog-detail-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+
+        .blog-detail-content ul, .blog-detail-content ol {
+            margin: 1rem 0 1.5rem 1.5rem;
+        }
+
+        .blog-detail-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-detail-content blockquote {
+            border-left: 3px solid #444;
+            padding-left: 1rem;
+            margin: 1.5rem 0;
+            color: #999;
+            font-style: italic;
+        }
+
+        .blog-detail-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .blog-detail-tag {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        /* 文件下载页面 */
+        .file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: all 0.3s;
+            opacity: 0;
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        .file-item:nth-child(1) { animation-delay: 0.1s; }
+        .file-item:nth-child(2) { animation-delay: 0.2s; }
+        .file-item:nth-child(3) { animation-delay: 0.3s; }
+        .file-item:nth-child(4) { animation-delay: 0.4s; }
+
+        .file-item:hover {
+            border-color: #444;
+            background: var(--surface-hover);
+            transform: translateX(5px);
+        }
+
+        .file-icon {
+            width: 56px;
+            height: 56px;
+            background: #1a1a1a;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+            border: 1px solid var(--border);
+        }
+
+        .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.3rem;
+            font-size: 1.1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .file-desc {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+
+        .file-download {
+            padding: 0.6rem 1.2rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--accent);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .file-download:hover {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .file-download.downloaded {
+            background: var(--success);
+            border-color: var(--success);
+            color: var(--bg);
+        }
+
+        /* 关于页面 */
+        .about-content p {
+            color: #888;
+            margin-bottom: 1rem;
+            line-height: 1.8;
+            opacity: 0;
+            animation: fadeUp 0.6s ease-out 0.2s forwards;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.6s ease-out 0.4s forwards;
+        }
+
+        .skill-tag {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #999;
+            transition: all 0.3s;
+        }
+
+        .skill-tag:hover {
+            border-color: #555;
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #444;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                margin-top: 0.5rem;
+            }
+            
+            .nav-links a {
+                font-size: 0.85rem;
+            }
+            
+            .home-intro { padding: 3rem 0; }
+            .home-intro h1 { font-size: 1.8rem; }
+            .avatar { width: 100px; height: 100px; }
+            .resource-grid { grid-template-columns: 1fr; }
+            .blog-header { flex-direction: column; gap: 0.5rem; }
+            .blog-detail-title { font-size: 1.5rem; }
+            
+            .file-item {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            
+            .file-download {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links {
+                gap: 0.6rem;
+            }
+            
+            .nav-links a {
+                font-size: 0.75rem;
+            }
+            
+            .bilibili-btn {
+                padding: 0.3rem 0.8rem;
+                font-size: 0.8rem;
+            }
+            
+            .file-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo" onclick="showPage('home')">我的空间</a>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showPage('home')" class="nav-link active" data-page="home">主页</a></li>
+                <li><a href="#" onclick="showPage('resources')" class="nav-link" data-page="resources">资源</a></li>
+                <li><a href="#" onclick="showPage('downloads')" class="nav-link" data-page="downloads">下载</a></li>
+                <li><a href="#" onclick="showPage('blog')" class="nav-link" data-page="blog">博客</a></li>
+                <li><a href="#" onclick="showPage('about')" class="nav-link" data-page="about">关于</a></li>
+            </ul>
+            <a href="https://space.bilibili.com/1013459131" target="_blank" class="bilibili-btn">B站</a>
+        </div>
+    </nav>
+
+    <!-- 主页 -->
+    <div id="home" class="page active">
+        <div class="home-intro">
+            <div class="avatar-container">
+                <img src="./images/avatar.jpg" alt="头像" class="avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                <div class="resource-icon-fallback" style="display: none; margin: 0 auto 2rem; width: 120px; height: 120px; border-radius: 50%; font-size: 3rem;">👤</div>
+            </div>
+            <h1>梦语の小站</h1>
+            <p>记录学习，分享资源，探索技术</p>
+            <div class="home-links">
+                <a href="#" onclick="showPage('blog')" class="btn btn-primary">阅读文章</a>
+                <a href="#" onclick="showPage('downloads')" class="btn">文件下载</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 资源导航 -->
+    <div id="resources" class="page">
+        <h1>资源导航</h1>
+        <div class="category-tabs" id="resourceTabs"></div>
+        <div class="resource-grid" id="resourceList"></div>
+    </div>
+
+    <!-- 文件下载 -->
+    <div id="downloads" class="page">
+        <h1>文件下载</h1>
+        <div class="category-tabs" id="downloadTabs"></div>
+        <div class="file-list" id="fileList"></div>
+    </div>
+
+    <!-- 博客列表 -->
+    <div id="blog" class="page">
+        <h1>我的博客</h1>
+        <div class="category-tabs" id="blogTabs"></div>
+        <div class="blog-list" id="blogList"></div>
+        <div class="load-more" id="loadMoreContainer">
+            <button class="btn" onclick="loadMoreBlogs()">加载更多</button>
+        </div>
+    </div>
+
+    <!-- 博文详情 -->
+    <div id="blogDetail" class="page">
+        <button class="btn btn-back" onclick="backToBlogList()">
+            <span>←</span>
+            <span>返回列表</span>
+        </button>
+        <article class="blog-detail" id="blogDetailContent"></article>
+    </div>
+
+    <!-- 关于 -->
+    <div id="about" class="page">
+        <h1>关于我</h1>
+        <div class="about-content">
+            <p>喵~</p>
+            <p>QQ:1775894379</p>
+            <p>邮箱:mengyu.awa@outlook.com</p>
+            <div class="skills" id="skillList"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p></p>
+    </footer>
+
+    <script>
+        // 博客数据
+        const blogs = [
+            {
+                id: 1,
+                title: '如何构建高性能的前端应用',
+                date: '2024-04-15',
+                category: '前端',
+                excerpt: '探讨现代前端性能优化的最佳实践，包括代码分割、懒加载等技术手段...',
+                tags: ['性能', '优化', 'Webpack'],
+                content: `
+                    <p>在现代 Web 开发中，性能优化已经成为一个不可忽视的环节。用户对于页面加载速度的期待越来越高，研究表明，页面加载时间每增加 1 秒，转化率就会下降 7%。</p>
+                    <h2>代码分割（Code Splitting）</h2>
+                    <p>代码分割是提升首屏加载速度最有效的手段之一。通过将代码拆分成多个小块，用户可以只下载当前页面需要的代码。</p>
+                    <pre><code>const LazyComponent = React.lazy(() => import('./HeavyComponent'));</code></pre>
+                    <h2>图片优化</h2>
+                    <p>图片通常占据页面大部分的下载体积。使用现代图片格式如 WebP，以及实现懒加载，可以显著减少初始加载时间。</p>
+                    <ul>
+                        <li>使用 WebP/AVIF 格式替代 JPEG/PNG</li>
+                        <li>实现图片懒加载（Lazy Loading）</li>
+                        <li>使用响应式图片（srcset）</li>
+                    </ul>
+                    <p>通过综合运用这些技术，我们可以将 Lighthouse 性能评分提升到 90 分以上。</p>
+                `
+            },
+            {
+                id: 2,
+                title: '深入理解 CSS Grid 布局',
+                date: '2024-04-08',
+                category: 'CSS',
+                excerpt: '从基础概念到高级技巧，全面解析 CSS Grid 布局系统...',
+                tags: ['CSS', '布局', 'Grid'],
+                content: `
+                    <p>CSS Grid 布局是 CSS 中最强大的布局系统。与 Flexbox 的一维布局不同，Grid 是二维的，可以同时处理行和列。</p>
+                    <h2>基础概念</h2>
+                    <p>Grid 布局的核心是网格容器（Grid Container）和网格项（Grid Item）。</p>
+                    <pre><code>.container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}</code></pre>
+                    <p>掌握 Grid 布局，你将能够轻松实现以前需要复杂 CSS 或 JavaScript 才能完成的布局效果。</p>
+                `
+            },
+            {
+                id: 3,
+                title: 'JavaScript 异步编程指南',
+                date: '2024-03-28',
+                category: 'JavaScript',
+                excerpt: '彻底搞懂 Promise、Async/Await 和 Event Loop...',
+                tags: ['JS', '异步', 'Promise'],
+                content: '<p>内容准备中...</p>'
+            },
+            {
+                id: 4,
+                title: 'TypeScript 高级类型技巧',
+                date: '2024-03-20',
+                category: 'TypeScript',
+                excerpt: '掌握 TypeScript 高级类型，提升代码健壮性...',
+                tags: ['TS', '类型', '高级'],
+                content: '<p>内容准备中...</p>'
+            },
+            {
+                id: 5,
+                title: 'React Hooks 最佳实践',
+                date: '2024-03-15',
+                category: 'React',
+                excerpt: '如何正确使用 useEffect、useMemo 等 Hooks...',
+                tags: ['React', 'Hooks'],
+                content: '<p>内容准备中...</p>'
+            },
+            {
+                id: 6,
+                title: 'Node.js 性能调优实战',
+                date: '2024-03-10',
+                category: '后端',
+                excerpt: '从事件循环到内存管理，全面提升 Node.js 性能...',
+                tags: ['Node', '性能'],
+                content: '<p>内容准备中...</p>'
+            }
+        ];
+
+        // 资源数据
+        const resources = [
+            { name: 'GitHub', desc: '开源代码托管平台', image: './images/icons/github.png', fallback: '⚡', category: '开发', tags: ['代码', '开源'] },
+            { name: 'MDN Web Docs', desc: 'Web 技术权威文档', image: './images/icons/mdn.png', fallback: '📚', category: '文档', tags: ['前端', '参考'] },
+            { name: 'Stack Overflow', desc: '开发者问答社区', image: './images/icons/stackoverflow.png', fallback: '❓', category: '社区', tags: ['问答', '编程'] },
+            { name: 'Figma', desc: '协作式界面设计工具', image: './images/icons/figma.png', fallback: '🎨', category: '设计', tags: ['UI', '协作'] },
+            { name: 'Vercel', desc: '前端部署平台', image: './images/icons/vercel.png', fallback: '🚀', category: '工具', tags: ['部署', '云'] },
+            { name: 'Can I Use', desc: '浏览器兼容性查询', image: './images/icons/caniuse.png', fallback: '🔍', category: '工具', tags: ['兼容', '查询'] },
+            { name: 'CodePen', desc: '在线代码编辑器', image: './images/icons/codepen.png', fallback: '💻', category: '开发', tags: ['编辑器', '分享'] },
+            { name: 'Dribbble', desc: '设计灵感社区', image: './images/icons/dribbble.png', fallback: '🎯', category: '设计', tags: ['灵感', 'UI'] }
+        ];
+
+        // 文件下载数据 - 易于扩展
+        const downloads = [
+            {
+                id: 1,
+                name: '样例',
+                filename: 'file.name',
+                size: '12 KB',
+                date: '2028-06-07',
+                category: '工具',
+                desc: '样例下载链接，无意义',
+                icon: '⚙️',
+                url: 'https://nothing.sb'
+            }
+        ];
+
+        const skills = ['JavaScript', 'TypeScript', 'React', 'Vue', 'Node.js', 'Python', 'Go', 'Docker'];
+
+        let currentResourceCategory = '全部';
+        let currentBlogCategory = '全部';
+        let currentDownloadCategory = '全部';
+        let blogDisplayCount = 4;
+
+        // 初始化
+        function init() {
+            renderResourceTabs();
+            renderResources();
+            renderDownloadTabs();
+            renderDownloads();
+            renderBlogTabs();
+            renderBlogs();
+            renderSkills();
+            
+            const hash = window.location.hash.slice(1);
+            if (hash && document.getElementById(hash)) showPage(hash);
+        }
+
+        // 渲染资源分类标签
+        function renderResourceTabs() {
+            const categories = ['全部', ...new Set(resources.map(r => r.category))];
+            const container = document.getElementById('resourceTabs');
+            container.innerHTML = categories.map(cat => 
+                `<button class="category-tab ${cat === currentResourceCategory ? 'active' : ''}" 
+                    onclick="filterResources('${cat}')">${cat}</button>`
+            ).join('');
+        }
+
+        // 渲染资源列表
+        function renderResources() {
+            const filtered = currentResourceCategory === '全部' 
+                ? resources 
+                : resources.filter(r => r.category === currentResourceCategory);
+            
+            const container = document.getElementById('resourceList');
+            container.innerHTML = filtered.map((r, i) => `
+                <a href="https://${r.name.toLowerCase().replace(/\s/g, '')}.com" target="_blank" class="resource-card" style="animation-delay: ${i * 0.1}s">
+                    <img src="${r.image}" alt="${r.name}" class="resource-icon" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="resource-icon-fallback" style="display: none;">${r.fallback}</div>
+                    <div class="resource-name">${r.name}</div>
+                    <div class="resource-desc">${r.desc}</div>
+                    <div class="resource-meta">
+                        ${r.tags.map(t => `<span class="resource-tag">${t}</span>`).join('')}
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        function filterResources(category) {
+            currentResourceCategory = category;
+            renderResourceTabs();
+            renderResources();
+        }
+
+        // 渲染下载分类标签
+        function renderDownloadTabs() {
+            const categories = ['全部', ...new Set(downloads.map(d => d.category))];
+            const container = document.getElementById('downloadTabs');
+            container.innerHTML = categories.map(cat => 
+                `<button class="category-tab ${cat === currentDownloadCategory ? 'active' : ''}" 
+                    onclick="filterDownloads('${cat}')">${cat}</button>`
+            ).join('');
+        }
+
+        // 渲染下载列表
+        function renderDownloads() {
+            const filtered = currentDownloadCategory === '全部' 
+                ? downloads 
+                : downloads.filter(d => d.category === currentDownloadCategory);
+            
+            const container = document.getElementById('fileList');
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 3rem;">暂无该分类的文件</p>';
+                return;
+            }
+            
+            container.innerHTML = filtered.map((f, i) => `
+                <div class="file-item" style="animation-delay: ${i * 0.1}s">
+                    <div class="file-icon">${f.icon}</div>
+                    <div class="file-info">
+                        <div class="file-name">${f.name}</div>
+                        <div class="file-meta">
+                            <span>${f.filename}</span>
+                            <span>${f.size}</span>
+                            <span>${f.date}</span>
+                            <span style="color: #555; background: #1a1a1a; padding: 0.1rem 0.5rem; border-radius: 3px; font-size: 0.8rem;">${f.category}</span>
+                        </div>
+                        <div class="file-desc">${f.desc}</div>
+                    </div>
+                    <a href="${f.url}" class="file-download" download onclick="handleDownload(this, '${f.name}')">
+                        <span>↓</span>
+                        <span>下载</span>
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        function filterDownloads(category) {
+            currentDownloadCategory = category;
+            renderDownloadTabs();
+            renderDownloads();
+        }
+
+        function handleDownload(element, filename) {
+            // 检查文件是否存在（简单模拟）
+            element.classList.add('downloaded');
+            element.innerHTML = '<span>✓</span><span>已下载</span>';
+            
+            // 3秒后恢复
+            setTimeout(() => {
+                element.classList.remove('downloaded');
+                element.innerHTML = '<span>↓</span><span>下载</span>';
+            }, 3000);
+        }
+
+        // 渲染博客分类标签
+        function renderBlogTabs() {
+            const categories = ['全部', ...new Set(blogs.map(b => b.category))];
+            const container = document.getElementById('blogTabs');
+            container.innerHTML = categories.map(cat => 
+                `<button class="category-tab ${cat === currentBlogCategory ? 'active' : ''}" 
+                    onclick="filterBlogs('${cat}')">${cat}</button>`
+            ).join('');
+        }
+
+        // 渲染博客列表
+        function renderBlogs() {
+            const filtered = currentBlogCategory === '全部' 
+                ? blogs 
+                : blogs.filter(b => b.category === currentBlogCategory);
+            
+            const display = filtered.slice(0, blogDisplayCount);
+            const container = document.getElementById('blogList');
+            
+            container.innerHTML = display.map((b, i) => `
+                <article class="blog-item" style="animation-delay: ${i * 0.1}s" onclick="showBlogDetail(${b.id})">
+                    <div class="blog-header">
+                        <div class="blog-title">${b.title}</div>
+                        <span class="blog-category">${b.category}</span>
+                    </div>
+                    <div class="blog-meta">
+                        <span>${b.date}</span>
+                        <span>${b.tags.join(' · ')}</span>
+                    </div>
+                    <div class="blog-excerpt">${b.excerpt}</div>
+                </article>
+            `).join('');
+
+            document.getElementById('loadMoreContainer').style.display = 
+                filtered.length > blogDisplayCount ? 'block' : 'none';
+        }
+
+        function filterBlogs(category) {
+            currentBlogCategory = category;
+            blogDisplayCount = 4;
+            renderBlogTabs();
+            renderBlogs();
+        }
+
+        function loadMoreBlogs() {
+            blogDisplayCount += 3;
+            renderBlogs();
+        }
+
+        function showBlogDetail(blogId) {
+            const blog = blogs.find(b => b.id === blogId);
+            if (!blog) return;
+
+            const container = document.getElementById('blogDetailContent');
+            container.innerHTML = `
+                <header class="blog-detail-header">
+                    <h1 class="blog-detail-title">${blog.title}</h1>
+                    <div class="blog-detail-meta">
+                        <span>${blog.date}</span>
+                        <span>${blog.category}</span>
+                        <span>${blog.tags.join(' · ')}</span>
+                    </div>
+                    <div class="blog-detail-tags">
+                        ${blog.tags.map(t => `<span class="blog-detail-tag">${t}</span>`).join('')}
+                    </div>
+                </header>
+                <div class="blog-detail-content">
+                    ${blog.content}
+                </div>
+            `;
+
+            document.getElementById('blog').classList.remove('active');
+            document.getElementById('blogDetail').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function backToBlogList() {
+            document.getElementById('blogDetail').classList.remove('active');
+            document.getElementById('blog').classList.add('active');
+        }
+
+        function renderSkills() {
+            document.getElementById('skillList').innerHTML = 
+                skills.map(s => `<span class="skill-tag">${s}</span>`).join('');
+        }
+
+        function showPage(pageName) {
+            document.getElementById('blogDetail').classList.remove('active');
+            
+            document.querySelectorAll('.page').forEach(p => {
+                if (p.id !== 'blogDetail') p.classList.remove('active');
+            });
+            
+            const targetPage = document.getElementById(pageName);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.toggle('active', link.dataset.page === pageName);
+            });
+            
+            history.replaceState(null, null, '#' + pageName);
+            window.scrollTo(0, 0);
+        }
+
+        init();
+    </script>
+</body>
+</html>
