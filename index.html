@@ -647,6 +647,22 @@
             transform: translateX(5px);
         }
 
+        .file-cover {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .file-item:hover .file-cover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
         .file-icon {
             width: 56px;
             height: 56px;
@@ -992,6 +1008,11 @@
                 flex-wrap: wrap;
                 gap: 1rem;
             }
+
+            .file-cover {
+                width: 100%;
+                height: 160px;
+            }
             
             .file-download {
                 width: 100%;
@@ -1219,6 +1240,7 @@ function hello() {
                     category: '壁纸',
                     desc: '同学上传的壁纸',
                     icon: '🏞️',
+                    cover: './images/downloads/wallpapers.jpg',
                     url: 'https://github.com/mengyu-awa/mengyu-awa/releases/download/wallpapers-2026-04-18/wallpapers_2026_04_18.zip'
                 },
                 {
@@ -1229,7 +1251,8 @@ function hello() {
                     date: '2026-04-19',
                     category: '工具',
                     desc: 'vpn，只能我用',
-                    icon: '🏞️',
+                    icon: '🔒',
+                    cover: './images/downloads/vpn.png',
                     url: 'https://github.com/mengyu-awa/mengyu-awa/releases/download/vpn_with_config/vpn.zip'
                 }
             ],
@@ -1313,7 +1336,6 @@ function hello() {
                 modal.classList.add('active');
                 document.body.classList.add('modal-open');
                 
-                // 聚焦到关闭按钮以提升无障碍体验
                 setTimeout(() => {
                     modal.querySelector('.modal-close').focus();
                 }, 100);
@@ -1324,7 +1346,6 @@ function hello() {
                 modal.classList.remove('active');
                 document.body.classList.remove('modal-open');
                 
-                // 恢复焦点到触发按钮
                 document.querySelector('footer a[onclick*="openContactModal"]').focus();
             },
 
@@ -1349,7 +1370,6 @@ function hello() {
                         button.textContent = '复制';
                     }, 2000);
                 } catch (err) {
-                    // 降级方案
                     const input = document.createElement('input');
                     input.value = text;
                     document.body.appendChild(input);
@@ -1439,7 +1459,11 @@ function hello() {
                 
                 container.innerHTML = filtered.map((f, i) => `
                     <div class="file-item" style="animation-delay: ${i * 0.1}s">
-                        <div class="file-icon" role="img" aria-label="文件图标">${f.icon}</div>
+                        ${f.cover ? 
+                            `<img src="${f.cover}" alt="${f.name}封面" class="file-cover" width="80" height="80" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'; this.nextElementSibling.style.width='80px'; this.nextElementSibling.style.height='80px';">` : 
+                            ''
+                        }
+                        <div class="file-icon" role="img" aria-label="文件图标" style="${f.cover ? 'display: none;' : ''}">${f.icon}</div>
                         <div class="file-info">
                             <div class="file-name">${f.name}</div>
                             <div class="file-meta">
